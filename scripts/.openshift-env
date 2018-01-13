@@ -4,9 +4,9 @@ SECRET_GITHUB_SSH="secret-github-ssh"
 SECRET_NEXUS_SERVICE="secret-nexus-service"
 SECRET_JENKINS_SERVICE="secret-jenkins-service"
 
-# Predefined template parameters
-GIT_URL="git@github.com:cchet/openshift-ci-cd.git"
-GIT_REF="develop"
+# Build server git config
+BUILD_SERVER_GIT_URL="git@github.com:OpenshiftCICD/buildserver.git"
+BUILD_SERVER_GIT_REF="master"
 
 # Jenkins service git config
 JENKINS_SERVICE_GIT_URL="git@github.com:OpenshiftCICD/service-jenkins.git"
