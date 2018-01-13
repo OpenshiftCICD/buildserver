@@ -1,0 +1,26 @@
+\section{Entwickler Setup}
+\label{sec:dev-setup}
+Dieser Abschnitt beschreibt das Aufsetzen einer lokalen Entwicklungsumgebung für die Entwicklung mit Openshift. Es wird davon ausgegangen, dass auf einem Linux System gearbetiet wird.
+
+\subsection{Openshift Origin}
+Dieser Abschnitt beschreibt das Einrichten des lokalen Oepnshift \emph{Clusters}.
+\newline
+\newline
+Es werden folgende Ressourcen benötigt, die unter den folgenden \emph{URLs} heruntergeladen werden können.
+\begin{enumerate}
+	\item\emph{\url{https://developers.redhat.com/products/openshift/download/}}:
+	\newline
+	Es wird die Version \emph{3.5.5.31.24} benötigt, die unter \emph{älter Versionen} gefunden werden kann. Mit dieser Binary wird der lokale \emph{Cluster} betrieben. 
+	\newline
+	Es wird ein aktiver JBoss \emph{Developer Account} vorausgesetzt.
+	\item\emph{\url{https://github.com/openshift-evangelists/oc-cluster-wrapper/releases/tag/0.9.3}}:
+	\newline
+	Bei \emph{oc-cluster-wrapper} handlet es sich um ein Shell-Skript, welches das Arbeiten mit oc erleichtert.
+\end{enumerate}
+Das \emph{oc} Binary sowie das Skript \emph{oc-cluster-wrapper} müssen in den \emph{PATH} mitaufgenommen werden. Das Skript \emph{oc-cluster-wrapper} verwendet das \emph{oc} Binary, das mit \emph{oc} über den \emph{PATH} angesprochen werden kann.
+\newline
+\newline
+\subsubsection{Allgemeine Tasks}
+Dieser Abschnitt beschreibt die allgemeinen Tasks, die mit \emph{oc} und \emph{oc-cluster-wrapper} durchgeführt werden.
+
+

@@ -1,0 +1,56 @@
+\documentclass[german]{article}
+
+\usepackage{url}
+\usepackage[german]{}   % enables umlaute
+\usepackage[utf8]{inputenc}  % set encoding to utf8 otherwise no umlaute
+\usepackage{graphicx}        % for including graphics
+\usepackage[hidelinks]{hyperref}        % for using hyperlinks in the document
+\usepackage{tabularx}        % for extending tabluar
+\usepackage{multirow}        % for rowspan in tabularx
+\usepackage{ltablex}         % tables over multiple pages
+\usepackage{textcmds}        % for quote support
+\usepackage{pdfpages}        % for pdf include
+\usepackage{caption}
+\usepackage{minted}
+\usepackage{listings}
+\usepackage[left=1.0in, right=1.0in, top=1.0in, bottom=1.0in]{geometry} % for custom page layout
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+
+\newmintedfile[yamlFile]{yaml}{
+	linenos=true, 
+	frame=single, 
+	breaklines=true, 
+	tabsize=2,
+	numbersep=5pt,
+	xleftmargin=10pt,
+	baselinestretch=1,
+	fontsize=\footnotesize
+}
+
+\newmintedfile[javaFile]{java}{
+	linenos=true, 
+	frame=single, 
+	breaklines=true, 
+	tabsize=2,
+	numbersep=5pt,
+	xleftmargin=10pt,
+	baselinestretch=1,
+	fontsize=\footnotesize
+}
+
+% Title Page
+\title{CI/CD mit Openshift}
+\author{Thomas Herzog B.Sc / Phillip Wurm B.Sc}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Dieses Dokument beinhaltet die Dokumentation der \emph{CI/CD}-Umgebung, die in Oepnshift aufgesetzt wurde.
+
+\end{abstract}
+
+\include{chapter/development_setup}
+\end{document}          
