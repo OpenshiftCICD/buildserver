@@ -1,0 +1,17 @@
+# Secrets the apps use
+SECRET_NEXUS_DOCKER_REGISTRY="secret-docker-registry"
+SECRET_GITHUB_SSH="secret-github-ssh"
+SECRET_NEXUS_SERVICE="secret-nexus-service"
+SECRET_JENKINS_SERVICE="secret-jenkins-service"
+
+# Predefined template parameters
+GIT_URL="git@github.com:cchet/openshift-ci-cd.git"
+GIT_REF="develop"
+
+# Jenkins service git config
+JENKINS_SERVICE_GIT_URL="git@github.com:OpenshiftCICD/service-jenkins.git"
+JENKINS_SERVICE_GIT_REF="master"
+
+# Service names
+NEXUS_SERVICE=nexus
+JENKINS_SERVICE=jenkins

@@ -1,0 +1,384 @@
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "jenkins"
+  annotations:
+    openshift.io/display-name: "Jenkins"
+    description: "Jenkins instance"
+    iconClass: "icon-jenkins"
+    tags: "instant-app,jenkins"
+
+parameters:
+  - name: "JENKINS_SERVICE_HOST"
+    displayName: "Jenkins service name"
+    value: "jenkins"
+    required: true
+
+  - name: "JNLP_SERVICE_NAME"
+    displayName: "Jenkins service name"
+    value: "jenkins-jnlp"
+    required: true
+
+  - name: "MAVEN_MIRROR_URL"
+    displayName: "The url of the maven mirror"
+    required: true
+
+  - name: "SECRET_NEXUS_SERVICE"
+    displayName: "Nexus secret"
+    description: "The nexus secret for repository access"
+    required: true
+
+  - name: "SECRET_JENKINS_SERVICE"
+    displayName: "Jenkins secret"
+    description: "The jenkins secret"
+    required: true
+
+  - name: "GIT_REPO_URL"
+    displayName: "The repository url"
+    required: true
+
+  - name: "GIT_REPO_REF"
+    displayName: "The repository ref"
+    required: true
+
+  - name: "SECRET_GITHUB_SSH"
+    displayName: "The git secret to use"
+    required: true
+
+  - name: "MIN_CPU"
+    displayName: "Min CPU"
+    description: "Min cpu allocated to the pod"
+    required: true
+    value: "1000m"
+
+  - name: "MIN_MEMORY"
+    displayName: "Min Memory"
+    description: "Min memory in Gigabyte allocated to the pod"
+    required: true
+    value: "1"
+
+  - name: "MAX_CPU"
+    displayName: "Max CPU"
+    description: "Max cpu allocated to the pod"
+    required: true
+    value: 1000m
+
+  - name: "MAX_MEMORY"
+    displayName: "Max Memory"
+    description: "Max memory in Gigabyte allocated to the pod"
+    required: true
+    value: "1"
+
+  - name: "MAX_VOLUME_SIZE"
+    displayName: "Max volume size"
+    description: "Max volume size to the pod"
+    required: true
+    value: "10Gi"
+
+  - name: "KUBERNETES_MASTER"
+    displayName: "Kubernetes Master url"
+    description: "The kubernetes master url, jenkins interacts with"
+    required: true
+    value: "https://kubernetes.default:443"
+
+  - name: "KUBERNETES_TRUST_CERTIFICATES"
+    displayName: "Truest Kubernetes certificates"
+    description: "True if we want to trust the kubernetes certificates of the given kubernetes master, false otherwise"
+    required: true
+    value: "true"
+
+  - name: "OPENSHIFT_JENKINS_JVM_ARCH"
+    displayName: "Openshift JVM architecture"
+    description: "Define the openshift used jvm architecture"
+    required: true
+    value: "x86_64"
+
+  - name: "OPENSHIFT_ENABLE_OAUTH"
+    displayName: "Enable Openshift Oauth"
+    description: "True if we want to use openshift Oauth, false otherwise"
+    required: true
+    value: "false"
+
+  - name: "OPENSHIFT_ENABLE_REDIRECT_PROMPT"
+    displayName: "Enable Openshift redirect prompt"
+    description: "True if we want to enable redirect prompt, false otherwise"
+    required: true
+    value: "false"
+
+objects:
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        openshift.io/display-name: "Jenkins"
+    spec:
+      tags:
+          - name: "latest"
+            annotations:
+              openshift.io/display-name: "Jenkins (latest)"
+              description: "The jenkins image"
+              iconClass: "icon-jenkins"
+              tags: "jenkins"
+            from:
+              kind: "DockerImage"
+              name: "openshift/jenkins-2-centos7:v3.9"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-custom"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        openshift.io/display-name: "Jenkins Custom"
+
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "${MAX_VOLUME_SIZE}"
+
+  - kind: "ServiceAccount"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        serviceaccounts.openshift.io/oauth-redirectreference.jenkins: "{\"kind\":\"OAuthRedirectReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"Route\",\"name\":\"${JENKINS_SERVICE_HOST}\"}}"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+
+  - kind: "RoleBinding"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}_edit"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    groupNames: null
+    subjects:
+      - name: "${JENKINS_SERVICE_HOST}"
+        kind: "ServiceAccount"
+    roleRef:
+      name: "edit"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins"
+      labels:
+        name: "jenkins"
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      runPolicy: "Serial"
+      source:
+        type: "Git"
+        contextDir: "./s2i/jenkins-ci"
+        git:
+          uri: "${GIT_REPO_URL}"
+          ref: "${GIT_REPO_REF}"
+        sourceSecret:
+          name: "${SECRET_GITHUB_SSH}"
+      strategy:
+        type: "Source"
+        sourceStrategy:
+          from:
+            kind: "ImageStreamTag"
+            name: "jenkins:latest"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "jenkins-custom:latest"
+          labels:
+            app: "${JENKINS_SERVICE_HOST}"
+          annotations:
+            openshift.io/display-name: "Jenkins Custom"
+            description: "The custom jenkins image "
+      triggers:
+        - type: "GitHub"
+          github:
+            secret: "${SECRET_GITHUB_SSH}"
+        - type: "ConfigChange"
+        - type: "ImageChange"
+          imageChange:
+            automatic: true
+            containerNames:
+              - "${JENKINS_SERVICE_HOST}"
+            from:
+              kind: "ImageStreamTag"
+              name: "jenkins:latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        template.alpha.openshift.io/wait-for-ready: "true"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      strategy:
+        type: "Recreate"
+      replicas: "1"
+      selector:
+        name: "${JENKINS_SERVICE_HOST}"
+      triggers:
+        - type: "ConfigChange"
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - "${JENKINS_SERVICE_HOST}"
+            from:
+              kind: "ImageStreamTag"
+              name: "jenkins-custom:latest"
+        - type: "ConfigChange"
+      template:
+        metadata:
+          labels:
+            name: "${JENKINS_SERVICE_HOST}"
+        spec:
+          serviceAccountName: "${JENKINS_SERVICE_HOST}"
+          containers:
+            - name: "${JENKINS_SERVICE_HOST}"
+              image: " "
+              imagePullPolicy: IfNotPresent
+              readinessProbe:
+                successThreshold: 1
+                failureThreshold: 10
+                timeoutSeconds: 5
+                initialDelaySeconds: 5
+                periodSeconds: 5
+                httpGet:
+                  path: "/login"
+                  port: 8080
+              livenessProbe:
+                successThreshold: 1
+                failureThreshold: 10
+                timeoutSeconds: 5
+                initialDelaySeconds: 15
+                periodSeconds: 5
+                httpGet:
+                  path: "/login"
+                  port: 8080
+              env:
+                - name: "JENKINS_PASSWORD"
+                  valueFrom:
+                      secretKeyRef:
+                        key: "password"
+                        name: "${SECRET_JENKINS_SERVICE}"
+                - name: "NEXUS_USER"
+                  valueFrom:
+                      secretKeyRef:
+                        name: "${SECRET_NEXUS_SERVICE}"
+                        key: "username"
+                - name: "NEXUS_PASSWORD"
+                  valueFrom:
+                      secretKeyRef:
+                        name: "${SECRET_NEXUS_SERVICE}"
+                        key: "password"
+                - name: "JENKINS_SERVICE_HOST"
+                  value: "${JENKINS_SERVICE_HOST}"
+                - name: "JNLP_SERVICE_NAME"
+                  value: "${JNLP_SERVICE_NAME}"
+                - name: "KUBERNETES_TRUST_CERTIFICATES"
+                  value: "${KUBERNETES_TRUST_CERTIFICATES}"
+                - name: "KUBERNETES_MASTER"
+                  value: "${KUBERNETES_MASTER}"
+                - name: "OPENSHIFT_JENKINS_JVM_ARCH"
+                  value: "${OPENSHIFT_JENKINS_JVM_ARCH}"
+                - name: "OPENSHIFT_ENABLE_OAUTH"
+                  value: "${OPENSHIFT_ENABLE_OAUTH}"
+                - name: "OPENSHIFT_ENABLE_REDIRECT_PROMPT"
+                  value: "${OPENSHIFT_ENABLE_REDIRECT_PROMPT}"
+                - name: "MAVEN_MIRROR_URL"
+                  value: "${MAVEN_MIRROR_URL}"
+                - name: "GIT_SSL_NO_VERIFY"
+                  value: "true"
+                - name: "JAVA_GC_OPTS"
+                  value: "-XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=1024m"
+                - name: "JAVA_OPTS"
+                  value: "-Xms${MIN_MEMORY}g -Xmx${MAX_MEMORY}g -Dhudson.footerURL=http://liwest.at"
+              resources:
+                requests:
+                  memory: "${MIN_MEMORY}Gi"
+                  cpu: "${MIN_CPU}"
+                limits:
+                  memory: "${MAX_MEMORY}Gi"
+                  cpu: "${MAX_CPU}"
+              volumeMounts:
+                - name: "${JENKINS_SERVICE_HOST}"
+                  mountPath: "/var/lib/jenkins"
+              terminationMessagePath: "/dev/termination.log"
+              imagePullPolicy: "IfNotPresent"
+              capabilities:
+                securityContext:
+                  capabilities:
+                    privileged: false
+          volumes:
+            - name: "${JENKINS_SERVICE_HOST}"
+              persistentVolumeClaim:
+                claimName: ${JENKINS_SERVICE_HOST}
+
+  - kind: "Route"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      to:
+        kind: "Service"
+        name: "${JENKINS_SERVICE_HOST}"
+      tls:
+        termination: "edge"
+        insecureEdgeTerminationPolicy: "Redirect"
+
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        service.alpha.openshift.io/dependencies: "[{\"name\": \"${JNLP_SERVICE_NAME}\", \"namespace\": \"\", \"kind\": \"Service\"}]"
+        service.openshift.io/infrastructure: "true"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      ports:
+        - name: "web"
+          protocol: "TCP"
+          port: 80
+          targetPort: 8080
+          nodePort: 0
+      selector:
+        name:  "${JENKINS_SERVICE_HOST}"
+      type: "ClusterIP"
+      sessionAffinity: "None"
+
+  - kind: "Service"
+    apiVersion: "v1"
+    metadata:
+      name: "${JNLP_SERVICE_NAME}"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    spec:
+      ports:
+        - name: "agent"
+          protocol: "TCP"
+          port: 50000
+          targetPort: 50000
+          nodePort: 0
+      selector:
+        name:  "${JENKINS_SERVICE_HOST}"
+      type: "ClusterIP"
+      sessionAffinity: "None"

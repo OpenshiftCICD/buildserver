@@ -1,0 +1,181 @@
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "jenkins-slave-gradle-build"
+  labels:
+    app: "${APP_NAME}"
+
+parameters:
+  - name: "APP_NAME"
+    displayName: "The app name"
+    required: true
+
+  - name: "MAVEN_VERSION"
+    displayName: "The maven version"
+    required: true
+
+  - name: "GRADLE_VERSION"
+    displayName: "The gradle version"
+    required: true
+
+  - name: "GIT_REPO_URL"
+    displayName: "The repository url"
+    required: true
+
+  - name: "GIT_REPO_REF"
+    displayName: "The repository ref"
+    required: true
+
+  - name: "SECRET_GITHUB_SSH"
+    displayName: "The github secret for build"
+    required: true
+
+  - name: "SECRET_NEXUS_SERVICE"
+    displayName: "The nexus secret for build"
+    required: true
+
+objects:
+  # =========================== ImageStreams ===========================
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-slave-base"
+      labels:
+        role: "jenkins-slave"
+        app: "${APP_NAME}"
+      annotations:
+        openshift.io/display-name: "jenkins-slave-base"
+    spec:
+      tags:
+          - name: "latest"
+            labels:
+              role: "jenkins-slave"
+              app: "${APP_NAME}"
+            annotations:
+              openshift.io/display-name: "Jenkins Slave Base"
+              description: "The jenkins slave base"
+              iconClass: "icon-jenkins"
+              tags: "slave-base"
+              version: "3.7.0"
+            from:
+              kind: "DockerImage"
+              name: "registry.hub.docker.com/openshift/jenkins-slave-base-centos7:3.7.0"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-slave-maven3"
+      labels:
+        role: "jenkins-slave"
+        app: "${APP_NAME}"
+      annotations:
+        openshift.io/display-name: "jenkins-slave-maven3"
+
+  - kind: "ImageStream"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-slave-gradle"
+      labels:
+        role: "jenkins-slave"
+        app: "${APP_NAME}"
+      annotations:
+        openshift.io/display-name: "jenkins-slave-gradle"
+
+  # =========================== BuildConfigs ===========================
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-slave-maven3"
+      labels:
+        name: "jenkins-slave-maven3"
+        app: "${APP_NAME}"
+    spec:
+      runPolicy: "Serial"
+      source:
+        type: "Git"
+        contextDir: "./docker/jenkins-slaves/maven3"
+        git:
+          uri: "${GIT_REPO_URL}"
+          ref: "${GIT_REPO_REF}"
+        sourceSecret:
+          name: "${SECRET_GITHUB_SSH}"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          env:
+            - name: "BUILD_LOGLEVEL"
+              value: "5"
+            - name: "VERSION"
+              value: "${MAVEN_VERSION}"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "jenkins-slave-maven3:latest"
+          labels:
+            role: "jenkins-slave"
+            app: "${APP_NAME}"
+          annotations:
+            openshift.io/display-name: "Jenkins slave maven3"
+            description: "The jenkins slave maven3 image"
+            iconClass: "icon-jenkins"
+            tags: "slave-maven3"
+            role: "jenkins-slave"
+      triggers:
+        - type: "GitHub"
+          github:
+            secret: "${SECRET_GITHUB_SSH}"
+        - type: "ConfigChange"
+        - type: "ImageChange"
+          imageChange:
+            from:
+              kind: "ImageStreamTag"
+              name: "jenkins-slave-base:latest"
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "jenkins-slave-gradle"
+      labels:
+        name: "jenkins-slave-gradle"
+        app: "${APP_NAME}"
+    spec:
+      runPolicy: "Serial"
+      source:
+        type: "Git"
+        contextDir: "./docker/jenkins-slaves/gradle"
+        git:
+          uri: "${GIT_REPO_URL}"
+          ref: "${GIT_REPO_REF}"
+        sourceSecret:
+          name: "${SECRET_GITHUB_SSH}"
+      strategy:
+        type: "Docker"
+        dockerStrategy:
+          env:
+            - name: "BUILD_LOGLEVEL"
+              value: "5"
+            - name: "VERSION"
+              value: "${GRADLE_VERSION}"
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "jenkins-slave-gradle:latest"
+          labels:
+            role: "jenkins-slave"
+            app: "${APP_NAME}"
+          annotations:
+            openshift.io/display-name: "Jenkins slave gradle"
+            description: "The jenkins slave gradle image"
+            iconClass: "icon-jenkins"
+            tags: "slave-gradle"
+            role: "jenkins-slave"
+      triggers:
+        - type: "GitHub"
+          github:
+            secret: "${SECRET_GITHUB_SSH}"
+        - type: "ConfigChange"
+        - type: "ImageChange"
+          imageChange:
+            from:
+              kind: "ImageStreamTag"
+              name: "jenkins-slave-base:latest"
