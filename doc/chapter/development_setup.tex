@@ -6,38 +6,38 @@ Dieser Abschnitt beschreibt das Aufsetzen einer lokalen Entwicklungsumgebung fü
 Dieser Abschnitt behandelt, dass Einrichten von Docker für die Verwendung von Openshift. Es muss eine aktuelle Version von Docker installiert sein.
 
 \begin{minted}{bash}
-// 1. Define insecure registry, which is used by openshift
-//    depending on your linux distribution
+# 1. Define insecure registry, which is used by openshift
+#    depending on your linux distribution
 INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
 
-// 2. Reload the docker service
+# 2. Reload the docker service
 sudo systemctl daemon-reload
 
-// 3.Restart the docker service
+# 3.Restart the docker service
 sudo systemctl restart docker
 \end{minted} 
-Die ungesicherte Registry wird von Openshift dazu verwendet, um in Openshift gebaute Docker Images zu verwalten. 
+Die ungesicherte Registry wird von Openshift dazu verwendet, um in Openshift Docker Images zu verwalten. Openshift lädt sich die verwendeten externen Docker Images nur einmal in die lokale Docker \emph{Registry} und verwendet ausschließlich diese Images.
 
 \subsection{Firewall Setup}
 Dieser Abschnitt behandelt das Einrichten der Firewall für die Verwendung von Openshift.
 
 \begin{minted}{bash}
-// 1. Check docker bridge subnet
+# 1. Check docker bridge subnet
 docker network inspect 
 	-f "{{range .IPAM.Config }}{{ .Subnet }}{{end}}" bridge
 
-// 2. Create new firewall zone
+# 2. Create new firewall zone
 firewall-cmd --permanent --new-zone dockerc
 
-// 3. Add docker bridge network ass source
+# 3. Add docker bridge network ass source
 firewall-cmd --permanent --zone dockerc --add-source 172.17.0.0/16
 
-// 4. Add all ports docker and openshift needs
+# 4. Add all ports docker and openshift needs
 firewall-cmd --permanent --zone dockerc --add-port 8443/tcp
 firewall-cmd --permanent --zone dockerc --add-port 53/udp
 firewall-cmd --permanent --zone dockerc --add-port 8053/udp
 
-// 5. Reload the firewall rules
+# 5. Reload the firewall rules
 firewall-cmd --reload
 	
 \end{minted}
@@ -77,10 +77,10 @@ oc-cluster-wrapper down ci
 # Delete profile ci and all related cluster data
 oc-cluster-wrapper destroy ci
 \end{minted}
-\ \newpage
 
 Wenn beim Starten folgende Fehlermeldung auftritt, dann liegt es daran, dass die Konfiguration nicht mehr gültig, da Sie sich z.B. in einem anderen Netz befinden.
 \begin{minted}{bash}
+# Command built by oc-cluster-wrapper
 oc cluster up --version v3.5.5.31 
 --image registry.access.redhat.com/openshift3/ose 
 --public-hostname 127.0.0.1 
@@ -93,6 +93,8 @@ oc cluster up --version v3.5.5.31
 
 ...
 
+# Resulting error, because the cluster gets startet, 
+# when computer is in a different net.
 Finding server IP ... 
 Using 10.29.18.80 as the server IP
 -- Starting OpenShift container ... FAIL
@@ -107,3 +109,12 @@ do ls /var/lib/origin/openshift.local.config/node-$name &> /dev/null
 \ \newline
 Kopieren Sie das \emph{Shell}-Kommando \textbf{\emph{oc cluster up ...}} und entfernen Sie das Argument \textbf{\emph{--use-existing-config}}. Ohne das Argument \textbf{\emph{--use-existing-config}} wird eine neue Konfiguration erstellt.
 
+\subsection{Ultrahook Setup}
+Dieser Abschnitt behandelt das Einrichten von Ultrahook, das ein externer Service und eine lokale Applikation ist, mit der auf \emph{Localhost} auf externe \emph{Hooks} reagiert werden kann. Ohne Ultrahook können die \emph{Hooks} nicht lokal getestet werden.
+
+\begin{enumerate}
+	\item Registrieren eines \emph{Webhook Namespace} auf \url{http://www.ultrahook.com/register}.
+	\item Starten der lokalen Anwendung mit folgenden \emph{Shell}-Kommandos\\
+	\inlineBash{ultrahook -k <API_KEY> github <OPENSHIFT_HOOK_URL>}
+\end{enumerate}
+Jetzt kann auf einer lokalen Maschine auf z.B. Github \emph{Hooks} reagiert werden.

@@ -3,8 +3,46 @@
 Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Server}. Es gibt drei Szenarien für das Updaten des \emph{Build Servers}.
 \begin{enumerate}
 	\item Bei \textbf{\emph{Änderung der Quelltexte}} wie \emph{S2I Builds}\footnote{\url{https://github.com/openshift/source-to-image}} oder \emph{Dockerfiles}, muss der Docker \emph{Container} neu gebaut und der Service aktualisiert werden.
-	\item Bei \textbf{\emph{Änderung der Templates}}, muss der Service aktualisiert werden.
+	\item Bei \textbf{\emph{Änderung der Konfigurationen}}, muss der Service gegebenenfalls neu gebaut und aktualisiert werden.
 	\item Bei \textbf{\emph{Änderung der Docker Images}}, die Services beinhalten oder Basisimages darstellen, muss der Service aktualisiert werden.
 \end{enumerate}
 
 Openshift erlaubt es bei \emph{DeploymentConfigs} und \emph{BuildConfigs} \emph{Trigger}\footnote{\url{https://docs.openshift.com/container-platform/3.5/dev_guide/builds/triggering_builds.html}} zu definieren, die bei Ereignissen wie \emph{Github Commit}, \emph{ImageChange} oder \emph{ConfigChange} ausgelöst werden. Die folgenden Abschnitte beschreiben die verwendeten \emph{Trigger}.
+
+\subsubsection{\emph{Github Trigger}}
+Dieser Abschnitt behandelt den verwendeten \emph{Github Trigger}, der dazu verwendet wird, um Die Docker Images bei Quelltextänderungen neu zu bauen und den Service zu aktualisieren.\\
+
+Beim Jenkins Docker Image und den \emph{Slave} Images, wird bei einem \emph{Push} auf den \emph{master Branch}, das Image neu gebaut, da ein \emph{Push} auf den \emph{master Branch} als ein Release angesehen wird.
+
+\begin{minted}{yaml}
+triggers:
+  - type: "GitHub"
+    github:
+      secret: "<SECRET_NAME>"
+\end{minted}
+Wenn ein Github \emph{Trigger} definiert wurde, wird von Openshift eine \emph{Hook Url} erstellt, die bei Github registriert werden kann.
+
+\subsubsection{\emph{ImageChange Trigger}}
+Dieser Abschnitt behandelt den verwendeten \emph{ImageChange Trigger}, der dazu verwendet wird, um bei Änderungen der Docker Images die Service zu aktualisieren.\\
+
+Alle verwendeten Services definieren einen \emph{ImageChange Trigger}, der bei einer Änderung des Docker Images, welches über \emph{ImageStreams} verwaltet werden, ausgelöst wird. Änderungen an den Docker Images, die über \emph{ImageStreamTags} referenziert werden, werden nur bei Docker \emph{Registries} in Version 2 unterstützt, da Docker \emph{Registries} in Version 1 es nicht erlauben Images eindeutig zu identifizieren.
+\begin{minted}{yaml}
+triggers:
+  - type: "ImageChange"
+    imageChange:
+    automatic: true
+    containerNames:
+      - "<CONTAINER_NAME_USING_IMAGE>" 
+    from:
+      kind: "ImageStreamTag"
+      name: "<IMAGE_STREAM_NAME:IMAGE_STREAM_TAG_NAME>"
+\end{minted}
+
+\subsubsection{\emph{ConfigChange Trigger}}
+Dieser Abschnitt behandelt die verwendeten \emph{COnfigChange Trigger}, die auf Änderungen der Konfiguration regieren.\\
+
+Alle definierten Konfigurationen verwenden den \emph{ConfigChange Trigger}, der bei Änderungen der Konfiguration z.B. einen neuen \emph{Build} oder ein neues \emph{Deployment} auslöst.
+\begin{minted}{yaml}
+triggers:
+  - type: "ConfigChange"
+\end{minted}
