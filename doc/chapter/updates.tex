@@ -1,0 +1,10 @@
+\subsection{\emph{Upgrade}/\emph{Downgrade}}
+\label{sec:buildserver-updates}
+Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Server}. Es gibt drei Szenarien für das Updaten des \emph{Build Servers}.
+\begin{enumerate}
+	\item Bei \textbf{\emph{Änderung der Quelltexte}} wie \emph{S2I Builds}\footnote{\url{https://github.com/openshift/source-to-image}} oder \emph{Dockerfiles}, muss der Docker \emph{Container} neu gebaut und der Service aktualisiert werden.
+	\item Bei \textbf{\emph{Änderung der Templates}}, muss der Service aktualisiert werden.
+	\item Bei \textbf{\emph{Änderung der Docker Images}}, die Services beinhalten oder Basisimages darstellen, muss der Service aktualisiert werden.
+\end{enumerate}
+
+Openshift erlaubt es bei \emph{DeploymentConfigs} und \emph{BuildConfigs} \emph{Trigger}\footnote{\url{https://docs.openshift.com/container-platform/3.5/dev_guide/builds/triggering_builds.html}} zu definieren, die bei Ereignissen wie \emph{Github Commit}, \emph{ImageChange} oder \emph{ConfigChange} ausgelöst werden. Die folgenden Abschnitte beschreiben die verwendeten \emph{Trigger}.

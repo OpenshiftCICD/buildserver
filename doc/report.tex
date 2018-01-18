@@ -1,4 +1,4 @@
-\documentclass[german]{article}
+\documentclass[12pt, german]{article}
 
 \usepackage{url}
 \usepackage[german]{}   % enables umlaute
@@ -46,7 +46,8 @@
 \title{CI/CD mit Openshift}
 \author{Thomas Herzog B.Sc / Phillip Wurm B.Sc}
 
-
+\setlength{\parindent}{0cm}
+\sloppy
 \begin{document}
 \maketitle
 
@@ -56,4 +57,8 @@ Dieses Dokument beinhaltet die Dokumentation der \emph{CI/CD}-Umgebung, die in O
 \end{abstract}
 
 \include{chapter/development_setup}
+\input{chapter/buildserver}
+\input{chapter/updates}
+\input{chapter/secrets}
+
 \end{document}          
