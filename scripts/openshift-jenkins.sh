@@ -43,6 +43,16 @@ function create(){
     -p "SECRET_NEXUS_SERVICE=${SECRET_NEXUS_SERVICE}"
 } # create
 
+function createPipelines(){
+  # The jenkins slaves
+  oc new-app -f ../templates/pipeline.yml \
+    -p "APP_NAME=${JENKINS_SERVICE}" \
+    -p "GIT_REPO=git@github.com:cchet/raspberry-pi-security.git" \
+    -p "GIT_REF=master" \
+    -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
+    -p "JENKINS_FILE_PATH=Jenkinsfile"
+}
+
 # Deletes all jenkins resources
 function delete(){
   oc delete all -l app=${JENKINS_SERVICE}
@@ -53,7 +63,7 @@ function delete(){
 } # delete
 
 case $1 in
-   create|create_pipelines|delete_pipelines|delete)
+   createPipelines|create|create_pipelines|delete_pipelines|delete)
       $1
       ;;
    *)
