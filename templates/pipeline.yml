@@ -31,8 +31,8 @@ parameters:
     value: "Jenkinsfile"
     required: true
 
-  - name: "MAVEN_MIRROR_URL"
-    displayName: "The url of the maven mirror"
+  - name: "SECRET_GITHUB_SSH"
+    displayName: "The git secret to use"
     required: true
 
 objects:
@@ -43,27 +43,16 @@ objects:
         pipeline.alpha.openshift.io/uses: '[{"name": "${APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
       labels:
         name: "${APP_NAME}"
-      name: "${APP_NAME}"
+      name: "${APP_NAME}-pipe"
     spec:
       source:
         type: "Git"
         sourceSecret:
-          - "plosam-ssh"
+          - "${SECRET_GITHUB_SSH}"
         git:
           uri: "${GIT_REPO}"
           ref: "${GIT_REF}"
       strategy:
         jenkinsPipelineStrategy:
-          env:
-            - name: "APP_NAME"
-              value: "${APP_NAME}"
-            - name: "GIT_REPO"
-              value: "${GIT_REPO}"
-            - name: "GIT_REF"
-              value: "${GIT_REF}"
-            - name: "MAVEN_MIRROR_URL"
-              value: "${MAVEN_MIRROR_URL}"
-            - name: "GIT_SSL_NO_VERIFY"
-              value: true
           jenkinsfilePath: "${JENKINS_FILE_PATH}"
         type: JenkinsPipeline
