@@ -9,7 +9,7 @@ Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Serv
 
 Openshift erlaubt es bei \emph{DeploymentConfigs} und \emph{BuildConfigs} \emph{Trigger}\footnote{\url{https://docs.openshift.com/container-platform/3.5/dev_guide/builds/triggering_builds.html}} zu definieren, die bei Ereignissen wie \emph{Github Commit}, \emph{ImageChange} oder \emph{ConfigChange} ausgelöst werden. Die folgenden Abschnitte beschreiben die verwendeten \emph{Trigger}.
 
-\subsubsection{\emph{Github Trigger}}
+\subsubsection{Github \emph{Trigger}}
 Dieser Abschnitt behandelt den verwendeten \emph{Github Trigger}, der dazu verwendet wird, um Die Docker Images bei Quelltextänderungen neu zu bauen und den Service zu aktualisieren.\\
 
 Beim Jenkins Docker Image und den \emph{Slave} Images, wird bei einem \emph{Push} auf den \emph{master Branch}, das Image neu gebaut, da ein \emph{Push} auf den \emph{master Branch} als ein Release angesehen wird.
