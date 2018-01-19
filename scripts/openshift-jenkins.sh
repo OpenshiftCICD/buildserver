@@ -23,7 +23,6 @@ function create() {
     -p "GIT_REPO_REF=${JENKINS_SERVICE_GIT_REF}" \
     -p "MAVEN_MIRROR_URL=${MAVEN_MIRROR_URL}" \
     -p "MAVEN_REPOSITORY_URL=${MAVEN_REPOSITORY_URL}" \
-    -p "MAVEN_REPOSITORY_URL=${MAVEN_REPOSITORY_URL}" \    
     -p "MIN_CPU=1000m" \
     -p "MAX_CPU=2000m" \
     -p "MIN_MEMORY=1" \
