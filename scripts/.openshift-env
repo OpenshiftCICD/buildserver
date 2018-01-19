@@ -8,6 +8,16 @@ SECRET_JENKINS_SERVICE="secret-jenkins-service"
 BUILD_SERVER_GIT_URL="git@github.com:OpenshiftCICD/buildserver.git"
 BUILD_SERVER_GIT_REF="develop"
 
+# App service git config
+APP_SERVICE_GIT_URL="git@github.com:OpenshiftCICD/service-app.git"
+APP_SERVICE_GIT_REF="develop"
+
+# build resources
+MAVEN_REPSOTIRY_URL="https://nexus-57-het-fhooe-openshift-ci-cd.cloud.itandtel.at/repository/maven-releases/"
+MAVEN_MIRROR_URL="http://nexus:8081/repository/maven-central/"
+DOCKER_REGISTRY_URI="nexus-docker-registry-57-het-fhooe-openshift-ci-cd.cloud.itandtel.at"
+DOCKER_REGISTRY_URL="https://${DOCKER_REGISTRY_URI}"
+
 # Jenkins service git config
 JENKINS_SERVICE_GIT_URL="git@github.com:OpenshiftCICD/service-jenkins.git"
 JENKINS_SERVICE_GIT_REF="develop"

@@ -6,9 +6,6 @@
 VERSION_MAVEN="3.5.2"
 VERSION_GRADLE="4.4.1"
 
-# Jenkins environment
-MAVEN_MIRROR_URL="http://${NEXUS_SERVICE}:8080/repositories"
-
 # Execute in script dir
 cd $(dirname ${0})
 
@@ -17,7 +14,7 @@ source ./.openshift-env
 source ./.openshift-secret-env
 
 # Create all jenkins resources
-function create(){
+function create() {
   # The jenkins service, with custom config
   oc new-app -f ../templates/jenkins.yml \
     -p "JENKINS_SERVICE_HOST=${JENKINS_SERVICE}" \
@@ -46,12 +43,12 @@ function create(){
     -p "SECRET_NEXUS_SERVICE=${SECRET_NEXUS_SERVICE}"
 } # create
 
-function createPipelines(){
+function createPipeline() {
   # The jenkins slaves
   oc new-app -f ../templates/pipeline.yml \
     -p "APP_NAME=${JENKINS_SERVICE}" \
-    -p "GIT_REPO=git@github.com:cchet/raspberry-pi-security.git" \
-    -p "GIT_REF=master" \
+    -p "GIT_REPO=${APP_SERVICE_GIT_URL}" \
+    -p "GIT_REF=${APP_SERVICE_GIT_REF}" \
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
     -p "JENKINS_FILE_PATH=Jenkinsfile"
 }
@@ -61,10 +58,11 @@ function delete(){
   oc delete all -l app=${JENKINS_SERVICE}
   oc delete secrets -l app=${JENKINS_SERVICE}
   oc delete pvc -l app=${JENKINS_SERVICE}
+  oc delete bc -l app=${JENKINS_SERVICE}
 } # delete
 
 case $1 in
-   createPipelines|create|create_pipelines|delete_pipelines|delete)
+   createPipelines|create|createPipeline|delete)
       $1
       ;;
    *)
