@@ -9,13 +9,21 @@ cd $(dirname ${0})
 source ./.openshift-env
 
 function create() {
+  ./openshift-secrets.sh create
   ./openshift-jenkins.sh create
   ./openshift-nexus.sh create
+
+  oc describe bc/${JENKINS_SERVICE}
+  oc describe bc/jenkins-slave-maven3
+  oc describe bc/jenkins-slave-gradle
 }
 
-function createDev(){
-    ./openshift-secrets.sh create 'admin123' 'admin123' ${HOME}/.ssh/id_rsa http://${NEXUS_SERVICE}:8081/repositories/maven-central
-    create
+function createDev() {
+  # in the cloud we cannot create it that way
+  oc new-app -f ../templates/jenkins-sa.yml \
+    -p "JENKINS_SERVICE_HOST=${JENKINS_SERVICE}"
+
+  create
 }
 
 function delete() {
@@ -24,18 +32,19 @@ function delete() {
   ./openshift-nexus.sh delete
 }
 
-function backup(){
-  JENKINS_POD=$(oc get pod --selector=deploymentconfig=${JENKINS_SERVICE} -o jsonpath='{ .metadata.name }')
-  NEXUS_POD=$(oc get pod --selector=deploymentconfig=nexus -o jsonpath='{ .metadata.name }')
-  oc rsync ${JENKINS_POD}:/var/lib/jenkins ~/Workspace/Liwest/backup/
-  oc rsync ${NEXUS_POD}:/nexus-data ~/Workspace/Liwest/backup/
+function deleteDev() {
+    # in the cloud we cannot delete it that way
+    oc delete sa -l app=${JENKINS_SERVICE}
+    oc delete rolebinding -l app=${JENKINS_SERVICE}
+
+    delete
 }
 
 case "$1" in
-  createDev|create|delete)
+  create|delete|createDev|deleteDev)
     ${1}
     ;;
   *)
-    echo "./openshift-secrets.sh [create <JENKINS_PASSWORD> <NEXUS_PASSWORD> <SSH_PATH> |delete]"
+    echo "./openshift-buildserver.sh [create|delete|createDev|deleteDev]"
     ;;
 esac

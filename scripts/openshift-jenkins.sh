@@ -14,6 +14,7 @@ cd $(dirname ${0})
 
 # Source environment
 source ./.openshift-env
+source ./.openshift-secret-env
 
 # Create all jenkins resources
 function create(){
@@ -29,6 +30,7 @@ function create(){
     -p "MIN_MEMORY=1" \
     -p "MAX_MEMORY=3" \
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
+    -p "SECRET_GITHUB_HOOK=${SECRET_GITHUB_HOOK}" \
     -p "SECRET_NEXUS_SERVICE=${SECRET_NEXUS_SERVICE}" \
     -p "SECRET_JENKINS_SERVICE=${SECRET_JENKINS_SERVICE}"
 
@@ -40,6 +42,7 @@ function create(){
     -p "GIT_REPO_URL=${JENKINS_SERVICE_GIT_URL}" \
     -p "GIT_REPO_REF=${JENKINS_SERVICE_GIT_REF}" \
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
+    -p "SECRET_GITHUB_HOOK=${SECRET_GITHUB_HOOK}" \
     -p "SECRET_NEXUS_SERVICE=${SECRET_NEXUS_SERVICE}"
 } # create
 
@@ -57,9 +60,7 @@ function createPipelines(){
 function delete(){
   oc delete all -l app=${JENKINS_SERVICE}
   oc delete secrets -l app=${JENKINS_SERVICE}
-  oc delete sa -l app=${JENKINS_SERVICE}
   oc delete pvc -l app=${JENKINS_SERVICE}
-  oc delete rolebinding -l app=${JENKINS_SERVICE}
 } # delete
 
 case $1 in

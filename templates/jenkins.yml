@@ -45,6 +45,10 @@ parameters:
     displayName: "The git secret to use"
     required: true
 
+  - name: "SECRET_GITHUB_HOOK"
+    displayName: "The github hook secret for the trigger"
+    required: true
+
   - name: "MIN_CPU"
     displayName: "Min CPU"
     description: "Min cpu allocated to the pod"
@@ -148,28 +152,6 @@ objects:
         requests:
           storage: "${MAX_VOLUME_SIZE}"
 
-  - kind: "ServiceAccount"
-    apiVersion: "v1"
-    metadata:
-      name: "${JENKINS_SERVICE_HOST}"
-      annotations:
-        serviceaccounts.openshift.io/oauth-redirectreference.jenkins: "{\"kind\":\"OAuthRedirectReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"Route\",\"name\":\"${JENKINS_SERVICE_HOST}\"}}"
-      labels:
-        app: "${JENKINS_SERVICE_HOST}"
-
-  - kind: "RoleBinding"
-    apiVersion: "v1"
-    metadata:
-      name: "${JENKINS_SERVICE_HOST}_edit"
-      labels:
-        app: "${JENKINS_SERVICE_HOST}"
-    groupNames: null
-    subjects:
-      - name: "${JENKINS_SERVICE_HOST}"
-        kind: "ServiceAccount"
-    roleRef:
-      name: "edit"
-
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
@@ -205,7 +187,7 @@ objects:
       triggers:
         - type: "GitHub"
           github:
-            secret: "${SECRET_GITHUB_SSH}"
+            secret: "${SECRET_GITHUB_HOOK}"
         - type: "ConfigChange"
         - type: "ImageChange"
           imageChange:

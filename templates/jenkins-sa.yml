@@ -1,0 +1,38 @@
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "jenkins"
+  annotations:
+    openshift.io/display-name: "Jenkins"
+    description: "Jenkins instance"
+    iconClass: "icon-jenkins"
+    tags: "instant-app,jenkins"
+
+parameters:
+  - name: "JENKINS_SERVICE_HOST"
+    displayName: "Jenkins service name"
+    value: "jenkins"
+    required: true
+
+objects:
+  - kind: "ServiceAccount"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}"
+      annotations:
+        serviceaccounts.openshift.io/oauth-redirectreference.jenkins: "{\"kind\":\"OAuthRedirectReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"Route\",\"name\":\"${JENKINS_SERVICE_HOST}\"}}"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+
+  - kind: "RoleBinding"
+    apiVersion: "v1"
+    metadata:
+      name: "${JENKINS_SERVICE_HOST}_edit"
+      labels:
+        app: "${JENKINS_SERVICE_HOST}"
+    groupNames: null
+    subjects:
+      - name: "${JENKINS_SERVICE_HOST}"
+        kind: "ServiceAccount"
+    roleRef:
+      name: "edit"

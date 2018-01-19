@@ -30,6 +30,10 @@ parameters:
     displayName: "The github secret for build"
     required: true
 
+  - name: "SECRET_GITHUB_HOOK"
+    displayName: "The github hook secret for the trigger"
+    required: true
+
   - name: "SECRET_NEXUS_SERVICE"
     displayName: "The nexus secret for build"
     required: true
@@ -123,7 +127,7 @@ objects:
       triggers:
         - type: "GitHub"
           github:
-            secret: "${SECRET_GITHUB_SSH}"
+            secret: "${SECRET_GITHUB_HOOK}"
         - type: "ConfigChange"
         - type: "ImageChange"
           imageChange:
@@ -172,7 +176,7 @@ objects:
       triggers:
         - type: "GitHub"
           github:
-            secret: "${SECRET_GITHUB_SSH}"
+            secret: "${SECRET_GITHUB_HOOK}"
         - type: "ConfigChange"
         - type: "ImageChange"
           imageChange:
