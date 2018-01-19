@@ -23,6 +23,10 @@ parameters:
     displayName: "The url of the maven mirror"
     required: true
 
+  - name: "MAVEN_REPOSITORY_URL"
+    displayName: "The url of the maven repository to push"
+    required: true
+
   - name: "SECRET_NEXUS_SERVICE"
     displayName: "Nexus secret"
     description: "The nexus secret for repository access"
@@ -283,6 +287,8 @@ objects:
                   value: "${OPENSHIFT_ENABLE_REDIRECT_PROMPT}"
                 - name: "MAVEN_MIRROR_URL"
                   value: "${MAVEN_MIRROR_URL}"
+                - name: "MAVEN_REPOSITORY_URL"
+                  value: "${MAVEN_REPOSITORY_URL}"
                 - name: "GIT_SSL_NO_VERIFY"
                   value: "true"
                 - name: "JAVA_GC_OPTS"
