@@ -18,4 +18,7 @@
 \contentsline {subsection}{\numberline {3.3}Architektur}{11}{subsection.3.3}
 \contentsline {section}{\numberline {4}\emph {App Server}}{13}{section.4}
 \contentsline {section}{\numberline {5}\emph {Secrets}}{14}{section.5}
-\contentsline {section}{\numberline {6}Jenkins \emph {Build}}{14}{section.6}
+\contentsline {section}{\numberline {6}Jenkins \emph {Build}}{15}{section.6}
+\contentsline {subsection}{\numberline {6.1}Stage Prepare}{15}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Stage Build}{16}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Stage Deploy}{17}{subsection.6.3}

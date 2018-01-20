@@ -39,7 +39,25 @@
 	fontsize=\footnotesize
 }
 
+\newmintedfile[groovyFile]{groovy}{
+	linenos=true, 
+	frame=single, 
+	breaklines=true, 
+	tabsize=2,
+	numbersep=5pt,
+	xleftmargin=10pt,
+	baselinestretch=1,
+	fontsize=\footnotesize
+}
+
 \newmintinline[inlineBash]{bash}{}
+
+\usepackage{etoolbox}
+
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\makeatother
 
 % Title Page
 \title{CI/CD mit Openshift}
@@ -63,6 +81,6 @@ Dieses Dokument beinhaltet die Dokumentation der \emph{CI/CD}-Umgebung, die in O
 \input{chapter/buildserver}
 \input{chapter/appserver}
 \input{chapter/secrets}
-\input{chapter/jenkins}
+\include{chapter/jenkins}
 
 \end{document}          
