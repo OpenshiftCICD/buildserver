@@ -13,7 +13,7 @@ APP_SERVICE_GIT_URL="git@github.com:OpenshiftCICD/service-app.git"
 APP_SERVICE_GIT_REF="develop"
 
 # build resources
-MAVEN_REPOSITORY_URL="http://nexus:8081/repository/maven-snapshots"
+MAVEN_REPOSITORY_URL="http://nexus:8081/repository/maven-releases"
 MAVEN_MIRROR_URL="http://nexus:8081/repository/maven-central"
 DOCKER_REGISTRY_URI="nexus-docker-registry-57-het-fhooe-openshift-ci-cd.cloud.itandtel.at"
 DOCKER_REGISTRY_URL="https://${DOCKER_REGISTRY_URI}"

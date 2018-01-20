@@ -8,9 +8,14 @@
 \contentsline {subsection}{\numberline {2.1}\emph {Templates}}{6}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Skripte}{6}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Architektur}{7}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}\emph {Upgrade}/\emph {Downgrade}}{8}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Github \emph {Trigger}}{8}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}\emph {ImageChange Trigger}}{8}{subsubsection.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}\emph {ConfigChange Trigger}}{9}{subsubsection.2.4.3}
-\contentsline {subsection}{\numberline {2.5}\emph {Secrets}}{9}{subsection.2.5}
-\contentsline {section}{\numberline {3}Jenkins \emph {Build}}{9}{section.3}
+\contentsline {subsection}{\numberline {2.4}\emph {Upgrade}/\emph {Downgrade}}{9}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Github \emph {Trigger}}{9}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}\emph {ImageChange Trigger}}{9}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}\emph {ConfigChange Trigger}}{10}{subsubsection.2.4.3}
+\contentsline {section}{\numberline {3}\emph {Build Server}}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}\emph {Templates}}{10}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Skripte}{11}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Architektur}{11}{subsection.3.3}
+\contentsline {section}{\numberline {4}\emph {App Server}}{13}{section.4}
+\contentsline {section}{\numberline {5}\emph {Secrets}}{14}{section.5}
+\contentsline {section}{\numberline {6}Jenkins \emph {Build}}{14}{section.6}

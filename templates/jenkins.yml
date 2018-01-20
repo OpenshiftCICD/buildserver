@@ -226,7 +226,6 @@ objects:
             from:
               kind: "ImageStreamTag"
               name: "jenkins-custom:latest"
-        - type: "ConfigChange"
       template:
         metadata:
           labels:
