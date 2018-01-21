@@ -48,16 +48,16 @@ objects:
     kind: BuildConfig
     metadata:
       labels:
-        name: "${APP_NAME}"
+        app: "${APP_NAME}"
       name: "${PIPE_NAME}"
     spec:
       source:
         type: "Git"
-        sourceSecret:
-          - "${SECRET_GITHUB_SSH}"
         git:
           uri: "${GIT_REPO}"
           ref: "${GIT_REF}"
+        sourceSecret:
+          - "${SECRET_GITHUB_SSH}"
       strategy:
         jenkinsPipelineStrategy:
           jenkinsfilePath: "${JENKINS_FILE_PATH}"

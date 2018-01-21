@@ -56,7 +56,12 @@ function createPipeline() {
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
     -p "SECRET_GITHUB_HOOK=${SECRET_GITHUB_HOOK}" \
     -p "JENKINS_FILE_PATH=Jenkinsfile"
-}
+} # cretePipeline
+
+# Delete the jenkins pipeline
+function deletePipeline() {
+  oc delete bc/${JENKINS_SERVICE}-pipe
+} # deletePipeline
 
 # Deletes all jenkins resources
 function delete(){
@@ -64,14 +69,16 @@ function delete(){
   oc delete secrets -l app=${JENKINS_SERVICE}
   oc delete pvc -l app=${JENKINS_SERVICE}
   oc delete bc -l app=${JENKINS_SERVICE}
+
+  deletePipeline
 } # delete
 
 case $1 in
-   createPipelines|create|createPipeline|delete)
+   create|createPipeline|delete|deletePipeline)
       $1
       ;;
    *)
-     echo "./openshift-jenkins.sh [create|delete]"
+     echo "./openshift-jenkins.sh [create|delete|createPipeline|deletePipeline]"
      exit -1
      ;;
 esac
