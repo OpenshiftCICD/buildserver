@@ -13,6 +13,7 @@ function create() {
   ./openshift-jenkins.sh create
   ./openshift-nexus.sh create
 
+  # describe build configs to get webhook urls
   oc describe bc/${JENKINS_SERVICE}
   oc describe bc/jenkins-slave-maven3
   oc describe bc/jenkins-slave-gradle

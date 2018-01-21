@@ -1,0 +1,9 @@
+\section{Problemstellung}
+\label{sec:problem-statement}
+Dieser Abschnitt behandelt die Problembeschreibung des Projekts \emph{CI/CD mit Openshift}. Nachdem \emph{Cloud}-Lösungen wie Microsoft Azure, AWS oder Openshift immer mehr an Bedeutung gewinnen, soll mit diesem Projekt ein Prototyp implementiert werden, der eine CI/CD Umgebung in einer \emph{PaaS (Platform as a Service)} Lösung wie Openshift realisiert. \\
+
+Die zu implementierende CI/CD Umgebung soll einen \emph{Build}-Server (Jenkins) und einen \emph{Repository}-Manager (Nexus) beinhalten. Nexus soll als \emph{Mirror} und Artefakt-\emph{Repository} verwendet werden. Einerseits sollen die abhängigen Artefakte im Nexus zwischengespeichert werden, damit die Artefakte innerhalb des \emph{Clusters} geladen werden und nicht aus dem Internet. Andererseits soll Nexus alle freigegebenen Artefakte in einem \emph{Repository} verwalten. \\
+
+Mit einer Jenkins \emph{Pipeline}\footnote{\url{https://jenkins.io/doc/book/pipeline/}}, die in Jenkins ausgeführt wird, soll eine Beispielanwendung in einem eigenen Docker \emph{Container} gebaut, in Nexus hochgeladen und anschließend in Openshift eingespielt werden. Die Jenkins Pipeline soll als Openshift \emph{Build}-Konfiguration angelegt werden. Als Basis für den Docker \emph{Container}, in dem die Anwendung gebaut wird, soll ein Docker Image spezifiziert werden, das die \emph{Build}-Umgebung (Gradle) definiert sowie eine \emph{Build}-Konfiguration für das Bauen des Docker Images in Openshift.  \\
+
+Für die Beispielanwendung soll ein \emph{Template} erstellt werden, dass die Infrastruktur für diese Anwendung in Openshift spezifiziert. Die in diesem \emph{Template} zu spezifizierende  \emph{Build}-Konfiguration soll von der Jenkins \emph{Pipeline} ausgelöst werden, die wiederum das \emph{Deployment} der Anwendung auslösen soll, womit die neue Version in Openshift eingespielt werden soll. 

@@ -1,24 +1,22 @@
-\contentsline {section}{\numberline {1}Entwickler Setup}{3}{section.1}
-\contentsline {subsection}{\numberline {1.1}Docker Setup}{3}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Firewall Setup}{3}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Openshift Setup}{4}{subsection.1.3}
-\contentsline {subsubsection}{\numberline {1.3.1}Kommandos}{4}{subsubsection.1.3.1}
-\contentsline {subsection}{\numberline {1.4}Ultrahook Setup}{5}{subsection.1.4}
-\contentsline {section}{\numberline {2}\emph {Build Server}}{6}{section.2}
-\contentsline {subsection}{\numberline {2.1}\emph {Templates}}{6}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Skripte}{6}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Architektur}{7}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}\emph {Upgrade}/\emph {Downgrade}}{9}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Github \emph {Trigger}}{9}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}\emph {ImageChange Trigger}}{9}{subsubsection.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}\emph {ConfigChange Trigger}}{10}{subsubsection.2.4.3}
-\contentsline {section}{\numberline {3}\emph {Build Server}}{10}{section.3}
-\contentsline {subsection}{\numberline {3.1}\emph {Templates}}{10}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Skripte}{11}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Architektur}{11}{subsection.3.3}
-\contentsline {section}{\numberline {4}\emph {App Server}}{13}{section.4}
-\contentsline {section}{\numberline {5}\emph {Secrets}}{14}{section.5}
-\contentsline {section}{\numberline {6}Jenkins \emph {Build}}{15}{section.6}
-\contentsline {subsection}{\numberline {6.1}Stage Prepare}{15}{subsection.6.1}
-\contentsline {subsection}{\numberline {6.2}Stage Build}{16}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}Stage Deploy}{17}{subsection.6.3}
+\contentsline {section}{\numberline {1}Problemstellung}{3}{section.1}
+\contentsline {section}{\numberline {2}Projektaufbau}{3}{section.2}
+\contentsline {section}{\numberline {3}Entwickler Setup}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Docker Setup}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Firewall Setup}{5}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Openshift Setup}{5}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Ultrahook Setup}{7}{subsection.3.4}
+\contentsline {section}{\numberline {4}\emph {Build Server}}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}\emph {Templates}}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Skripte}{8}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}\emph {Update} Szenarien}{8}{subsection.4.3}
+\contentsline {subsubsection}{\numberline {4.3.1}Github \emph {Trigger}}{10}{subsubsection.4.3.1}
+\contentsline {subsubsection}{\numberline {4.3.2}\emph {ImageChange Trigger}}{10}{subsubsection.4.3.2}
+\contentsline {subsubsection}{\numberline {4.3.3}\emph {ConfigChange Trigger}}{10}{subsubsection.4.3.3}
+\contentsline {section}{\numberline {5}\emph {App Server}}{11}{section.5}
+\contentsline {subsection}{\numberline {5.1}\emph {Update}-Szenarien}{12}{subsection.5.1}
+\contentsline {section}{\numberline {6}\emph {Secrets}}{12}{section.6}
+\contentsline {section}{\numberline {7}Jenkins \emph {Build}}{13}{section.7}
+\contentsline {subsection}{\numberline {7.1}Stage Prepare}{13}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Stage Build}{14}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Stage Deploy}{15}{subsection.7.3}
+\contentsline {section}{\numberline {8}Diskussion}{16}{section.8}

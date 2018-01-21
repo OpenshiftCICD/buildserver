@@ -1,0 +1,13 @@
+\section{Projektaufbau}
+\label{sec:project-setup}
+Dieser Abschnitt behandelt den Aufbau des Projekts \emph{CI/CD mit Openshift}. Die Quelltexte des Projekts wurden in mehreren Github \emph{Repositories} organisiert, die folgend aufgelistet sind:
+\begin{enumerate}
+	\item\textbf{\emph{buildserver}}\footnote{\url{https://github.com/OpenshiftCICD/buildserver}} ist das \emph{Repository}, das die Openshift \emph{Templates} und Skripten für das Aufsetzen des \emph{Build}-Servers beinhaltet.
+	\item\textbf{\emph{service-jenkins}}\footnote{\url{https://github.com/OpenshiftCICD/service-jenkins}} ist das \emph{Repository}, das die Ressourcen für das Bauen des Jenkins Docker Image und der Jenkins \emph{Slave} Docker Images beinhaltet.
+	\item\textbf{\emph{service-app}}\footnote{\url{https://github.com/OpenshiftCICD/service-app.git}} ist das \emph{Repository}, das die Quelltexte und die \emph{Build}-Definition der Beispielanwendung beinhaltet.
+	\item\textbf{\emph{appserver}}\footnote{\url{https://github.com/OpenshiftCICD/appserver}} ist das \emph{Repository}, das die Openshift \emph{Templates} und Skripten für das Aufsetzen des Applikation Servers beinhaltet.
+\end{enumerate}
+\ \\
+Die Aufteilung in mehrere \emph{Repositories} wurde eingeführt, da die verschiedenen \emph{Repositories} Quelltexte und Ressourcen für verschiedene Anwendungszwecke beinhalten, die nicht zwangsweise zusammenhängend sind. Z.B. beinhaltet das \emph{Repository} \emph{service-jenkins} die Ressourcen zum Bauen eines Jenkins Docker Image über einem S2I \emph{Build}, wobei das resultierende Jenkins Docker Image auch anderweitig verwendet werden kann. Daher sind die Ressourcen des \emph{Repositories service-jenkins} nicht exklusiver Teil des \emph{Build}-Servers und daher auch nicht im \emph{Repsoitory buildserver} enthalten. \\
+
+Es werden Github \emph{Hooks} verwendet, um Openshift \emph{Builds} auszulösen, wobei bei der Aufteilung auf mehrere \emph{Repositories} Openshift \emph{Builds} nur dann ausgelöst werden, wenn die Ressourcen, die auch im \emph{Build} verwendet werden, geändert wurden. Bei der Verwendung von nur einem \emph{Repository} würden alle \emph{Builds} ausgelöst werden, was zu vielen unnötigen \emph{Builds} führen würde.

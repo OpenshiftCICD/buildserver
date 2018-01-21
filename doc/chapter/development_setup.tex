@@ -16,10 +16,12 @@ sudo systemctl daemon-reload
 # 3.Restart the docker service
 sudo systemctl restart docker
 \end{minted} 
-Die ungesicherte Registry wird von Openshift dazu verwendet, um in Openshift Docker Images zu verwalten. Openshift lädt sich die verwendeten externen Docker Images nur einmal in die lokale Docker \emph{Registry} und verwendet ausschließlich diese Images.
+
+Die ungesicherte Docker \emph{Registry} wird von Openshift dazu verwendet, um in Openshift Docker Images zu verwalten. Openshift lädt sich die verwendeten externen Docker Images nur einmal in die lokale Docker \emph{Registry} und verwendet dann ausschließlich diese Images. Die in Openshift gebauten Docker Images werden ebenfalls in der lokalen Docker \emph{Registry} verwaltet.
+\newpage
 
 \subsection{Firewall Setup}
-Dieser Abschnitt behandelt das Einrichten der Firewall für die Verwendung von Openshift.
+Dieser Abschnitt behandelt das Einrichten der Firewall für die Verwendung von Openshift. Ohne die folgenden Firewall Einstellungen kann in Openshift nicht auf das Internet zugegriffen werden.
 
 \begin{minted}{bash}
 # 1. Check docker bridge subnet
@@ -30,6 +32,7 @@ docker network inspect
 firewall-cmd --permanent --new-zone dockerc
 
 # 3. Add docker bridge network ass source
+#    The network address, is the one we got at #1
 firewall-cmd --permanent --zone dockerc --add-source 172.17.0.0/16
 
 # 4. Add all ports docker and openshift needs
@@ -41,44 +44,30 @@ firewall-cmd --permanent --zone dockerc --add-port 8053/udp
 firewall-cmd --reload
 	
 \end{minted}
-\ \newline
-Ohne diese Firewall Einstellungen kann kein Docker Container, der in Openshift läuft, DNS Namen auflösen, oder auf das Internet zugreifen.
+
 
 \subsection{Openshift Setup}
-Dieser Abschnitt beschreibt das Einrichten des lokalen Oepnshift \emph{Clusters}.
-\newline
-\newline
-Es werden folgende Ressourcen benötigt, die aus dem Internet heruntergeladen werden können.
+Dieser Abschnitt beschreibt das Einrichten des lokalen Oepnshift \emph{Clusters}. Es werden folgende Ressourcen benötigt, die aus dem Internet heruntergeladen werden können.
 \begin{enumerate}
-	\item\textbf{\emph{Openshift Client Tools}}
-	\newline
-	\emph{\url{https://developers.redhat.com/products/openshift/download/}}
-	\newline
-	Es wird die Version \emph{3.5.5.31.24} benötigt, die unter \emph{älter Versionen} gefunden werden kann.
-	\newline
-	Es wird ein aktiver JBoss \emph{Developer Account} vorausgesetzt.
-	\item\textbf{\emph{openshift-client-wrapper}}
-	\newline
-	\emph{\url{https://github.com/openshift-evangelists/oc-cluster-wrapper/releases/tag/0.9.3}}:
-	\newline
-	Bei \emph{oc-cluster-wrapper} handlet es sich um ein Shell-Skript, welches das Arbeiten mit oc erleichtert.
+	\item\textbf{\emph{Openshift Client Tools}}\footnote{\url{https://developers.redhat.com/products/openshift/download/}} ist das Linux Paket, mit dem der lokale \emph{Cluster} erstellt werden kann.
+	\item\textbf{\emph{openshift-client-wrapper}}\footnote{\url{https://github.com/openshift-evangelists/oc-cluster-wrapper/releases/tag/0.9.3}} ist ein Github \emph{Repository} das ein Shell-Skript zur Verfügung stellt, welches das Arbeiten mit oc erleichtert.
 \end{enumerate}
 Das \emph{oc} Binary sowie das Skript \emph{oc-cluster-wrapper} müssen in den \emph{PATH} mitaufgenommen werden. Das Skript \emph{oc-cluster-wrapper} verwendet das \emph{oc} Binary, das mit \emph{oc} über den \emph{PATH} angesprochen werden kann.
+\newpage
 
-\subsubsection{Kommandos}
-Dieser Abschnitt beschreibt die Kommandos, die für das Kontrollieren des \emph{Cluster}.
+Die folgenden \emph{Shell}-Kommandos, die von \emph{oc-cluster-wrapper} bereitgestellt werden, zeigen wie der Lebenszyklus des \emph{Clusters} gesteuert werden kann. Es wird \emph{oc-cluster-wrapper} anstatt \emph{oc} selbst verwendet, da bei \inlineBash{oc cluster down} der \emph{Cluster} vollständig gelöscht wird.
 \begin{minted}{bash}
 # Create or start persistent profile for local cluster named 'ci'
 oc-cluster-wrapper up ci
 
-# Stop the local cluster of profile 'ci'
-oc-cluster-wrapper down ci
+# Stop the current running cluster (assume profile is ci)
+oc-cluster-wrapper down [ci]
 
 # Delete profile ci and all related cluster data
 oc-cluster-wrapper destroy ci
 \end{minted}
 
-Wenn beim Starten folgende Fehlermeldung auftritt, dann liegt es daran, dass die Konfiguration nicht mehr gültig, da Sie sich z.B. in einem anderen Netz befinden.
+Wenn beim erneuten Starten eines bestehenden \emph{Cluster} Profils folgende Fehlermeldung auftritt, dann liegt es daran, dass die Konfiguration nicht mehr gültig, da der \emph{Cluster} gestartet wurde, wenn sich der Rechner in einem anderen Netz befindet als zuvor.
 \begin{minted}{bash}
 # Command built by oc-cluster-wrapper
 oc cluster up --version v3.5.5.31 
@@ -106,15 +95,14 @@ Command: [-c for name in 10.29.18.80 het.linux.gepardec.com; kma
 do ls /var/lib/origin/openshift.local.config/node-$name &> /dev/null 
 && echo $name && break; done]
 \end{minted}
-\ \newline
 Kopieren Sie das \emph{Shell}-Kommando \textbf{\emph{oc cluster up ...}} und entfernen Sie das Argument \textbf{\emph{--use-existing-config}}. Ohne das Argument \textbf{\emph{--use-existing-config}} wird eine neue Konfiguration erstellt.
 
 \subsection{Ultrahook Setup}
-Dieser Abschnitt behandelt das Einrichten von Ultrahook, das ein externer Service und eine lokale Applikation ist, mit der auf \emph{Localhost} auf externe \emph{Hooks} reagiert werden kann. Ohne Ultrahook können die \emph{Hooks} nicht lokal getestet werden.
+Dieser Abschnitt behandelt das Einrichten von Ultrahook, das ein externer Service und eine lokale Applikation ist, mit der auf \emph{Localhost} auf \emph{Webhook} reagiert werden kann. Ohne Ultrahook können die \emph{Hooks} nicht lokal getestet werden. Die folgenden zwei Punkte beschreiben das Einrichten von Ultrahook.
 
 \begin{enumerate}
 	\item Registrieren eines \emph{Webhook Namespace} auf \url{http://www.ultrahook.com/register}.
 	\item Starten der lokalen Anwendung mit folgenden \emph{Shell}-Kommandos\\
 	\inlineBash{ultrahook -k <API_KEY> github <OPENSHIFT_HOOK_URL>}
 \end{enumerate}
-Jetzt kann auf einer lokalen Maschine auf z.B. Github \emph{Hooks} reagiert werden.
+Jetzt kann auf einer lokalen Maschine auf z.B. Github \emph{Hooks} reagiert werden, wobei der \emph{Webhook} die von Ultrahook auf der Konsole ausgegebene \emph{Url} verwenden muss.

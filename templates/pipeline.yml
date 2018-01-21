@@ -35,6 +35,10 @@ parameters:
     displayName: "The git secret to use"
     required: true
 
+  - name: "SECRET_GITHUB_HOOK"
+    displayName: "The git webhook secret to use"
+    required: true
+
 objects:
   - apiVersion: v1
     kind: BuildConfig
@@ -56,3 +60,8 @@ objects:
         jenkinsPipelineStrategy:
           jenkinsfilePath: "${JENKINS_FILE_PATH}"
         type: JenkinsPipeline
+      trigger:
+          - type: "GitHub"
+            github:
+              secret: "${SECRET_GITHUB_HOOK}"
+          - type: "ConfigChange"

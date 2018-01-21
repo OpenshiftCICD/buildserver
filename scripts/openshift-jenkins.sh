@@ -51,6 +51,7 @@ function createPipeline() {
     -p "GIT_REPO=${APP_SERVICE_GIT_URL}" \
     -p "GIT_REF=${APP_SERVICE_GIT_REF}" \
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
+    -p "SECRET_GITHUB_HOOK=${SECRET_GITHUB_HOOK}" \
     -p "JENKINS_FILE_PATH=Jenkinsfile"
 }
 
@@ -67,7 +68,7 @@ case $1 in
       $1
       ;;
    *)
-     echo "Tried to call an unknown function. '${1}'"
+     echo "./openshift-jenkins.sh [create|delete]"
      exit -1
      ;;
 esac
