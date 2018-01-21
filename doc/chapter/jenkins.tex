@@ -7,7 +7,7 @@
 
 In diesem Build-Schritt werden alle Vorbereitungen für den eigentlichen Build getroffen. Es werden Variablen für \emph{Stash} und \emph{Unstash} angelegt, um das Projektverzeichnis zwischen den Steps/Pods zu verschieben. Weiters wird das aktuelle Repository verifiziert und eine Prüfsumme abgefragt.
 
-\begin{minted}{text}
+\begin{minted}{groovy}
 stage('Prepare') {
   println "Preparing the build..."
   STASH_GIT_REPO="git-repo"
