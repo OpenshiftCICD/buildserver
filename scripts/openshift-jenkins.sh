@@ -42,11 +42,14 @@ function create() {
     -p "SECRET_GITHUB_SSH=${SECRET_GITHUB_SSH}" \
     -p "SECRET_GITHUB_HOOK=${SECRET_GITHUB_HOOK}" \
     -p "SECRET_NEXUS_SERVICE=${SECRET_NEXUS_SERVICE}"
+
+  createPipeline
 } # create
 
 function createPipeline() {
   # The jenkins slaves
   oc new-app -f ../templates/pipeline.yml \
+    -p "PIPE_NAME=${JENKINS_SERVICE}-pipe" \
     -p "APP_NAME=${JENKINS_SERVICE}" \
     -p "GIT_REPO=${APP_SERVICE_GIT_URL}" \
     -p "GIT_REF=${APP_SERVICE_GIT_REF}" \

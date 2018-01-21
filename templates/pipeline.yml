@@ -14,6 +14,10 @@ metadata:
     tags: "instant-app,jenkins"
 
 parameters:
+  - name: "PIPE_NAME"
+    displayName: "THe name of the pipeline"
+    required: true
+
   - name: "APP_NAME"
     displayName: "THe name of the app, the build pipeline is for"
     required: true
@@ -43,11 +47,9 @@ objects:
   - apiVersion: v1
     kind: BuildConfig
     metadata:
-      annotations:
-        pipeline.alpha.openshift.io/uses: '[{"name": "${APP_NAME}", "namespace": "", "kind": "DeploymentConfig"}]'
       labels:
         name: "${APP_NAME}"
-      name: "${APP_NAME}-pipe"
+      name: "${PIPE_NAME}"
     spec:
       source:
         type: "Git"
