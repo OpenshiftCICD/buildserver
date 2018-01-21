@@ -17,6 +17,7 @@ function create() {
   oc describe bc/${JENKINS_SERVICE}
   oc describe bc/jenkins-slave-maven3
   oc describe bc/jenkins-slave-gradle
+  oc describe bc/${JENKINS_SERVICE}-pipe
 }
 
 function createDev() {

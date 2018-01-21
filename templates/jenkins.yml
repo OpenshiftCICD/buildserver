@@ -303,7 +303,7 @@ objects:
                   cpu: "${MAX_CPU}"
               volumeMounts:
                 - name: "${JENKINS_SERVICE_HOST}"
-                  mountPath: "/var/lib/jenkins"
+                  mountPath: "/var/lib/jenkins/jobs"
               terminationMessagePath: "/dev/termination.log"
               imagePullPolicy: "IfNotPresent"
               capabilities:
