@@ -1,7 +1,6 @@
 \section{\emph{Build Server}}
 \label{sec:buildserver}
-Dieser Abschnitt behandelt die Infrastruktur des \emph{Build}-Server in Openshift. Der \emph{Build}-Server wird innerhalb eines Openshift Projekts organisiert.
-
+Dieser Abschnitt behandelt die Infrastruktur des \emph{Build}-Server in Openshift. Der \emph{Build}-Server wird innerhalb eines Openshift Projekts organisiert. Nachdem der \emph{Build}-Server erstellt wurde, muss das Nexus Password abgeändert werden und die Release \emph{Policy} beim Maven \emph{Repository /maven-releases} auf \emph{Allow Redeploy} umgestellt werden.
 \subsection{\emph{Templates}}
 \label{sec:openshift-templates}
 Dieser Abschnitt behandelt die Openshift \emph{Templates}, welche die Integration der einzelnen Services innerhalb der \emph{Build}-Server Infrastruktur in Openshift spezifizieren. Die Openshift \emph{Templates} beinhalten alle Definitionen wie z.B. \emph{Build}-Konfigurationen und \emph{Deployment}-Konfigurationen, die Aspekte der \emph{Core Conepts}\footnote{\url{https://docs.openshift.com/container-platform/3.5/architecture/core_concepts/index.html}} von Kubernetes und Openshift sind. \\
