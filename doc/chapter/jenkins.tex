@@ -36,7 +36,7 @@ stage('Prepare') {
 
 Der eigentliche \emph{Build} findet in einem Pod, d.h. in einem \emph{Build-Slave}, der extra dafür gestartet wird, statt. In diesem Fall wird ein \emph{Gradle-Build-Slave} gestartet, die \emph{Sourcen} werden mittels \emph{./gradle} gebaut und danach wird der \emph{Build-Slave} zerstört. Zusätzlich werden noch Umgebungsvariablen an Gradle übergeben, welche in den Build-Targets genutzt werden, um z.B. Abhängigkeiten aus einem lokalen Nexus-Repository zu laden.
 
-\begin{minted}{text}
+\begin{minted}{groovy}
 stage('Build') {
   NEXUS_USER="${env.NEXUS_USER}"
   NEXUS_PASSWORD="${env.NEXUS_PASSWORD}"
@@ -77,11 +77,16 @@ stage('Build') {
 
 Der Trigger \emph{OpenShiftBuild} führt das Äquivalent zum Aufruf des Befehls oc start-build aus, bei dem die Build-Protokolle in Echtzeit an die Ausgabe des Jenkins-Plug-ins ausgegeben werden können. Zusätzlich zur Bestätigung, ob der Build erfolgreich war oder nicht, kann dieser Build-Schritt optional prüfen, ob die Deployment-Configs sogenannte Image-Change-Trigger für das von der Build-Config erzeugte Image haben. Wenn solche Deployment-Configs gefunden werden, werden diese  analysiert, um festzustellen, ob sie durch eine Imageänderung ausgelöst wurden. Dabei wird das vom aktuell ausgeführten Replication-Controler verwendete Image mit dem Image verglichen, das von seinem unmittelbaren Vorgänger verwendet wurde.
 
-\begin{minted}{text}
+\begin{minted}{groovy}
 stage('Deploy') {
+  // Set app version on app build config
+  echo sh(returnStdout: true, 
+              script: "oc env buildconfigs/spring-boot VERSION=1.0.0")
+
+  // Trigger the build config with the new version
   openshiftBuild(buildConfig: 'spring-boot', 
-  		env: [[ name: 'VERSION', value: '0.1.0' ]], 
-  		showBuildLogs: "true")
+                       showBuildLogs: "true", 
+                       checkForTriggeredDeployments: "true")
 }
 \end{minted}
 
