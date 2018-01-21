@@ -87,12 +87,18 @@ stage('Deploy') {
   openshiftBuild(buildConfig: 'spring-boot', 
                        showBuildLogs: "true", 
                        checkForTriggeredDeployments: "true")
+                       
+   // Verify successful deployment
+   openshiftVerifyDeployment(deploymentConfig: 'spring-boot', 
+                                           replicaCount: "1", 
+                                           verifyReplicaCount: "true",
+                                            waitTime: "30000")
 }
 \end{minted}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.4]{image/jenkins-deploy.png}
+	\includegraphics[scale=0.3]{image/jenkins-deploy.png}
 	\caption{Deploy Build}
 	\label{fig:architecture}
 \end{figure}
