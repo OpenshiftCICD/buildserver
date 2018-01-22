@@ -51,6 +51,11 @@ objects:
         app: "${APP_NAME}"
       name: "${PIPE_NAME}"
     spec:
+      triggers:
+        - type: "GitHub"
+          github:
+            secret: "${SECRET_GITHUB_HOOK}"
+        - type: "ConfigChange"
       source:
         type: "Git"
         git:
@@ -62,8 +67,3 @@ objects:
         jenkinsPipelineStrategy:
           jenkinsfilePath: "${JENKINS_FILE_PATH}"
         type: JenkinsPipeline
-      trigger:
-          - type: "GitHub"
-            github:
-              secret: "${SECRET_GITHUB_HOOK}"
-          - type: "ConfigChange"
