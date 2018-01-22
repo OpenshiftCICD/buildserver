@@ -24,7 +24,7 @@ Auf dem Level der Skripten wird eine Datei namens \emph{.openshift-env} und \emp
 	\item Im \emph{Skript} \textbf{\emph{openshift-buildserver.sh}} sind alle Funktionalitäten für das Verwalten des \emph{Build Servers} implementiert.
 	\item Im \emph{Skript} \textbf{\emph{openshift-secrets.sh}} sind alle Funktionalitäten für das Verwalten von \emph{Secrets} implementiert. Siehe Abschnitt \ref{sec:buildserver-secrets} für eine genauere Beschreibung der verwendeten \emph{Secrets}.
 \end{enumerate}
-\ 
+
 \subsection{\emph{Update} Szenarien}
 \label{sec:buildserver-updates}
 Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Server}. Es gibt folgende drei Szenarien für das Updaten des \emph{Build Servers}:
@@ -35,7 +35,8 @@ Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Serv
 	\item Bei \textbf{\emph{Änderung der Docker Images}}, die Services beinhalten oder Basisimages darstellen, muss der Service neu gebaut und eingespielt werden.
 \end{enumerate}
 Diese drei \emph{Update}-Szenarien können einfach in Openshift abgebildet werden, da Openshift alle nötigen \emph{Trigger}-Mechanismen zur Verfügung stellt, damit diese Änderung eingespielt werden können. 
-\newpage
+
+\pagebreak
 
 Openshift erlaubt es bei \emph{Deployment}-Konfigurationen und \emph{Build}-Konfigurationen \emph{Trigger}\footnote{\url{https://docs.openshift.com/container-platform/3.5/dev_guide/builds/triggering_builds.html}} zu definieren. Folgende \emph{Trigger}-Typen werden bereitgestellt:
 \begin{enumerate}
@@ -46,12 +47,15 @@ Openshift erlaubt es bei \emph{Deployment}-Konfigurationen und \emph{Build}-Konf
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.55]{logos/architecture-diagram-buildserver.jpg}
+	\includegraphics[scale=0.5]{logos/architecture-diagram-buildserver.jpg}
 	\caption{\emph{Build Server} Architektur}
 	\label{fig:architecture}
 \end{figure}
-\ \newpage
+
 Die Abbildung \ref{sec:buildserver} zeigt die Architektur der \emph{Build}-Server Infrastruktur, sowie den Ablauf der Prozesse, die von den Triggern ausgelöst werden. Die folgenden Abschnitte beschreiben die verwendeten \emph{Trigger}-Typen näher.
+
+\pagebreak
+
 \subsubsection{Github \emph{Trigger}}
 Dieser Abschnitt behandelt den verwendeten \emph{Github Trigger}, der dazu verwendet wird, um die Docker Images bei Quelltextänderungen neu zu bauen und den Service zu aktualisieren.\\
 

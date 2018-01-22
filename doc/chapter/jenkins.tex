@@ -1,8 +1,6 @@
 \section{Jenkins \emph{Build}}
 \label{sec:jenkins-build}
 
-
-
 \subsection{Stage Prepare}
 
 In diesem Build-Schritt werden alle Vorbereitungen für den eigentlichen Build getroffen. Es werden Variablen für \emph{Stash} und \emph{Unstash} angelegt, um das Projektverzeichnis zwischen den Steps/Pods zu verschieben. Weiters wird das aktuelle Repository verifiziert und eine Prüfsumme abgefragt.
@@ -23,14 +21,14 @@ stage('Prepare') {
 }
 \end{minted}
 
+Der eigentlich Checkout-Vorgang aus Git wird schon vorher von OpenShift erledigt.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.4]{image/jenkins-prepare.png}
 	\caption{Prepare Build Server}
 	\label{fig:architecture}
 \end{figure}
-
-\pagebreak
 
 \subsection{Stage Build}
 
@@ -71,8 +69,6 @@ stage('Build') {
 }
 \end{minted}
 
-\pagebreak
-
 \subsection{Stage Deploy}
 
 Der Trigger \emph{OpenShiftBuild} führt das Äquivalent zum Aufruf des Befehls oc start-build aus, bei dem die Build-Protokolle in Echtzeit an die Ausgabe des Jenkins-Plug-ins ausgegeben werden können. Zusätzlich zur Bestätigung, ob der Build erfolgreich war oder nicht, kann dieser Build-Schritt optional prüfen, ob die Deployment-Configs sogenannte Image-Change-Trigger für das von der Build-Config erzeugte Image haben. Wenn solche Deployment-Configs gefunden werden, werden diese  analysiert, um festzustellen, ob sie durch eine Imageänderung ausgelöst wurden. Dabei wird das vom aktuell ausgeführten Replication-Controler verwendete Image mit dem Image verglichen, das von seinem unmittelbaren Vorgänger verwendet wurde.
@@ -98,7 +94,7 @@ stage('Deploy') {
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{image/jenkins-deploy.png}
+	\includegraphics[scale=0.4]{image/jenkins-deploy.png}
 	\caption{Deploy Build}
 	\label{fig:architecture}
 \end{figure}
