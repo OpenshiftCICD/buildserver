@@ -77,24 +77,27 @@ Der Trigger \emph{OpenShiftBuild} führt das Äquivalent zum Aufruf des Befehls 
 stage('Deploy') {
   // Set app version on app build config
   echo sh(returnStdout: true, 
-              script: "oc env buildconfigs/spring-boot VERSION=1.0.0")
+              script: "oc env buildconfigs/spring-boot VERSION=1.0.0 
+                         -n 57-het-fhooe-openshift-services")
 
   // Trigger the build config with the new version
-  openshiftBuild(buildConfig: 'spring-boot', 
+  openshiftBuild(namespace: '57-het-fhooe-openshift-services',
+                       buildConfig: 'spring-boot', 
                        showBuildLogs: "true", 
                        checkForTriggeredDeployments: "true")
                        
    // Verify successful deployment
-   openshiftVerifyDeployment(deploymentConfig: 'spring-boot', 
+   openshiftVerifyDeployment(namespace: '57-het-fhooe-openshift-services',
+                                           deploymentConfig: 'spring-boot', 
                                            replicaCount: "1", 
                                            verifyReplicaCount: "true",
-                                            waitTime: "30000")
+                                           waitTime: "30000")
 }
 \end{minted}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.4]{image/jenkins-deploy.png}
+	\includegraphics[scale=0.35]{image/jenkins-deploy.png}
 	\caption{Deploy Build}
 	\label{fig:architecture}
 \end{figure}

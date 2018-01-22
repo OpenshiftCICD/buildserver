@@ -1,6 +1,14 @@
 \section{\emph{Build Server}}
 \label{sec:buildserver}
 Dieser Abschnitt behandelt die Infrastruktur des \emph{Build}-Server in Openshift. Der \emph{Build}-Server wird innerhalb eines Openshift Projekts organisiert. Nachdem der \emph{Build}-Server erstellt wurde, muss das Nexus Password abgeändert werden und die Release \emph{Policy} beim Maven \emph{Repository /maven-releases} auf \emph{Allow Redeploy} umgestellt werden.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.55]{image/buildserver-overview.png}
+	\caption{Übersicht der Services des \emph{Build}-Server}
+	\label{fig:appserver}
+\end{figure}
+
 \subsection{\emph{Templates}}
 \label{sec:openshift-templates}
 Dieser Abschnitt behandelt die Openshift \emph{Templates}, welche die Integration der einzelnen Services innerhalb der \emph{Build}-Server Infrastruktur in Openshift spezifizieren. Die Openshift \emph{Templates} beinhalten alle Definitionen wie z.B. \emph{Build}-Konfigurationen und \emph{Deployment}-Konfigurationen, die Aspekte der \emph{Core Conepts}\footnote{\url{https://docs.openshift.com/container-platform/3.5/architecture/core_concepts/index.html}} von Kubernetes und Openshift sind. \\
@@ -14,6 +22,7 @@ Die folgende Auflistung beschreibt die implementierten \emph{Templates}:
 \end{enumerate}
 
 \ \subsection{Skripte}
+\label{sec:buildserver-scripts}
 Dieser Abschnitt behandelt die Skripten, die für das Verwalten des \emph{Clusters} verwendet werden. Mit der Applikation \emph{oc} kann mit einem lokalen oder entfernten \emph{Cluster} interagiert werden. Damit der \emph{Build Server} einfach erstellt und gelöscht werden kann, sind für die einzelnen Services und für den \emph{Build Server} selbst
 Skripte erstellt worden, die alle nötigen Funktionalitäten beinhalten.\\
 
@@ -22,7 +31,7 @@ Auf dem Level der Skripten wird eine Datei namens \emph{.openshift-env} und \emp
 	\item Im \emph{Skript} \textbf{\emph{openshift-jenkins.sh}} sind alle Jenkins Service und Jenkins \emph{Slave} spezifischen Funktionen implementiert.
 	\item Im \emph{Skript} \textbf{\emph{openshift-nexus.sh}} sind alle Jenkins Service und Jenkins \emph{Slave} spezifischen Funktionen implementiert.
 	\item Im \emph{Skript} \textbf{\emph{openshift-buildserver.sh}} sind alle Funktionalitäten für das Verwalten des \emph{Build Servers} implementiert.
-	\item Im \emph{Skript} \textbf{\emph{openshift-secrets.sh}} sind alle Funktionalitäten für das Verwalten von \emph{Secrets} implementiert. Siehe Abschnitt \ref{sec:buildserver-secrets} für eine genauere Beschreibung der verwendeten \emph{Secrets}.
+	\item Im \emph{Skript} \textbf{\emph{openshift-secrets.sh}} sind alle Funktionalitäten für das Verwalten von \emph{Secrets} implementiert. Siehe Abschnitt \ref{sec:buildserver-secrets} für eine genauere Beschreibung von  \emph{Secrets}.
 \end{enumerate}
 
 \subsection{\emph{Update} Szenarien}
@@ -35,6 +44,20 @@ Dieser Abschnitt behandelt die \emph{Update}-Szenarien für den \emph{Build Serv
 	\item Bei \textbf{\emph{Änderung der Docker Images}}, die Services beinhalten oder Basisimages darstellen, muss der Service neu gebaut und eingespielt werden.
 \end{enumerate}
 Diese drei \emph{Update}-Szenarien können einfach in Openshift abgebildet werden, da Openshift alle nötigen \emph{Trigger}-Mechanismen zur Verfügung stellt, damit diese Änderung eingespielt werden können. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.55]{image/buildserver-builds.png}
+	\caption{Erfolgte \emph{Builds} im \emph{Build}-Server}
+	\label{fig:appserver}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.55]{image/buildserver-pods.png}
+	\caption{Laufende und abgeschlossene \emph{Pods} im \emph{Build}-Server}
+	\label{fig:appserver}
+\end{figure}
 
 \pagebreak
 
